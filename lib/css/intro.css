@@ -1,0 +1,6 @@
+.jumbotron {
+  background-image: url("../img/lck.jpg");
+  background-size: cover;
+  text-shadow: 0.2em 0.2em 0.2em;
+  color: white;
+}
