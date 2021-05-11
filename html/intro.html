@@ -5,18 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
-  <link rel="stylesheet" href="../lib/css/intro.css">
+  <link rel="stylesheet" href="../lib/css/index.css">
   <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
 </head>
-<body>
-  <div class="container">
-    <div class="jumbotron">
-      <h1 class="text-center">환영합니다</h1>
-      <p class="text-center">다양한 데이터 시각화를 맛보세요</p>
-      <p class="text-center"><a href="#" class="btn btn-primary btn-lg">둘러보기</a></p>
-    </div>
 
+<body>
+  <!-- header start -->
+  <header id="headers" class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  </header>
+  <!-- header end -->
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- nav start -->
+      <nav id="side-nav" class="side-nav d-flex flex-column justify-content-center p-3 text-white bg-dark col-xs-6 col-md-2">
+      </nav>
+      <!-- nav end -->
+
+      <div class="col jumbotron">
+        <h1 class="text-center">statLCK는</h1>
+        <p class="text-center">라이엇 게임즈에서 주최 및 주관하는 대한민국의 최상위 리그 오브 레전드 대회인 LCK와 관련한 통계를 볼 수 있는 대시보드입니다.</p>
+        <p class="text-center"><a href="#" class="btn btn-primary btn-lg">둘러보기</a></p>
+      </div>
+    </div>
   </div>
+
+  <script src="../lib/js/index.js"></script>
 </body>
 </html>
