@@ -77,6 +77,16 @@ public class DBConnection {
 		String sql = "INSERT INTO ? (?) VALUES (?)";
 		
 		
+		
+		try {
+			conn.setAutoCommit(false);
+			
+			pstmt = conn.prepareStatement(sql);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public static void main(String[] args) {

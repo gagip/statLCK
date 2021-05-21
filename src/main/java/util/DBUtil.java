@@ -32,10 +32,10 @@ public class DBUtil {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static int getNum(String table, Connection conn) throws SQLException {
+	public static int getNum(String table, String num_var, Connection conn) throws SQLException {
 		int num= 1;
 		
-		String sql= "SELECT Max(num) AS idx FROM "+table;
+		String sql= "SELECT Max("+ num_var +") AS idx FROM "+table;
 		Statement stmt= null;
 		ResultSet rs= null;
 		

@@ -1,6 +1,6 @@
 CREATE TABLE Member(
     member_num      NUMBER          PRIMARY KEY,
-    id              VARCHAR2(20)    NOT NULL,
+    id              VARCHAR2(20)    NOT NULL UNIQUE,
     pw              VARCHAR2(20)    NOT NULL,
     name            VARCHAR2(20),
     email           VARCHAR2(50),
@@ -33,4 +33,15 @@ CREATE TABLE Reply(
     FOREIGN KEY (board_num) REFERENCES Board(board_num),
     FOREIGN KEY (author) REFERENCES Member(member_num),
     FOREIGN KEY (rpy_parent_num) REFERENCES Reply(reply_num)
+);
+
+
+CREATE TABLE Summoner(
+    account_id      VARCHAR2(56),
+    profile_icon_id  NUMBER,
+    revision_date   NUMBER,
+    name            VARCHAR2(100),
+    id              VARCHAR2(63)    PRIMARY KEY,
+    puuid           VARCHAR2(78),
+    summoner_level  NUMBER
 );
