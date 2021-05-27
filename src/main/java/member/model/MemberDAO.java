@@ -1,16 +1,17 @@
-package member;
+package member.model;
 
 import static util.DBUtil.*;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 import base.DAOBase;
+import member.LoginState;
+
+
 
 public class MemberDAO extends DAOBase {
-	
 	private static MemberDAO instance;
 	
 	private MemberDAO() {
@@ -77,11 +78,13 @@ public class MemberDAO extends DAOBase {
 	 * @param pw
 	 * @return 1=로그인 성공; 0=비밀번호 불일치; -1=존재하지 않는 아이디;
 	 */
-	public int login(String id, String pw) {
-		String sql = "SELECT pw FROM Member WHERE id=?";
+	public LoginState login(String id, String pw) {
+		String sql = "SELECT id, pw FROM Member WHERE id=?";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, id);
 			
 			rs = pstmt.executeQuery();
 			
@@ -89,11 +92,11 @@ public class MemberDAO extends DAOBase {
 				String dbPw = rs.getString("pw");
 				if (dbPw.equals(pw)) {
 					// 로그인 성공
-					return 1;
+					return LoginState.SUCCESS;
 				}
 				else {
 					System.out.println("MemberDAO - 비밀번호 일치하지 않음");
-					return 0;
+					return LoginState.PW_MISMATCH;
 				}
 			} 
 		} catch (SQLException e) {
@@ -103,7 +106,7 @@ public class MemberDAO extends DAOBase {
 		
 		
 		System.out.println("MemberDAO - 존재하지 않는 아이디");
-		return -1;
+		return LoginState.NON_EXIST_ID;
 	}
 	
 	

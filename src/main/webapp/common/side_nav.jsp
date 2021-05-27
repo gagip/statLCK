@@ -16,7 +16,12 @@
         <a href="<%=request.getContextPath()%>/board/board_list.jsp" class="nav-link text-white">게시판</a>
       </li>
       <li>
-        <a href="<%=request.getContextPath()%>/member/signin.jsp" class="nav-link text-white">로그인</a>
+        <c:if test="${sessionScope.sessionId == null}">
+          <a href="signin.me" class="nav-link text-white">로그인</a>
+        </c:if>
+        <c:if test="${sessionScope.sessionId != null}">
+          <a href="logoutAction.me" class="nav-link text-white">로그아웃</a>
+        </c:if>
       </li>
     </ul>
   </div>

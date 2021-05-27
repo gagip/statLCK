@@ -19,10 +19,10 @@
     <div class="panel panel-info">
       <div class="panel-heading">
           <div class="panel-title">회원가입</div>
-          <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="<%=request.getContextPath()%>/member/signin.jsp">로그인</a></div>
+          <div style="float:right; font-size: 85%; position: relative; top:-10px"><a id="signinlink" href="signin.me">로그인</a></div>
       </div>  
       <div class="panel-body" >
-        <form id="signupform" class="form-horizontal" role="form">
+        <form id="signupform" class="form-horizontal" role="form" action="signupAction.me" method="POST">
                 
         <div id="signupalert" style="display:none" class="alert alert-danger">
           <p>Error:</p>
@@ -32,20 +32,20 @@
         <div class="form-group">
           <label for="userId" class="col-md-3 control-label">아이디</label>
           <div class="col-md-9">
-              <input type="text" class="form-control" name="userId" placeholder="최대 20글자(한글 10글자)">
+              <input type="text" class="form-control" name="id" placeholder="최대 20글자(한글 10글자)">
           </div>
         </div>
                     
         <div class="form-group">
           <label for="userPw" class="col-md-3 control-label">비밀번호</label>
           <div class="col-md-9">
-              <input type="password" class="form-control" name="userPw" placeholder="비밀번호">
+              <input type="password" class="form-control" name="pw" placeholder="비밀번호">
           </div>
         </div>
         <div class="form-group">
             <label for="userName" class="col-md-3 control-label">이름</label>
             <div class="col-md-9">
-                <input type="text" class="form-control" name="userName" placeholder="홍길동">
+                <input type="text" class="form-control" name="name" placeholder="홍길동">
             </div>
         </div>
         
@@ -80,7 +80,7 @@
         <div class="form-group">
             <!-- Button -->                                        
             <div class="col-md-offset-3 col-md-9">
-                <button id="btn-signup" type="button" class="btn btn-info"><i class="icon-hand-right"></i>Sign Up</button>
+                <button id="btn-signup" type="submit" class="btn btn-info"><i class="icon-hand-right"></i>Sign Up</button>
                 <span style="margin-left:8px;">or</span>  
             </div>
         </div>
