@@ -13,7 +13,7 @@
         <a href="<%=request.getContextPath()%>/intro/intro.jsp" class="nav-link text-white">사이트 소개</a>
       </li>
       <li>
-        <a href="<%=request.getContextPath()%>/board/board_list.jsp" class="nav-link text-white">게시판</a>
+        <a href="board_list.bo" class="nav-link text-white">게시판</a>
       </li>
       <li>
         <c:if test="${sessionScope.sessionId == null}">

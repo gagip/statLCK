@@ -13,9 +13,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import member.action.MemberViewAction;
 
-public abstract class ControllerBase extends HttpServlet{
+/**
+ * 페이지 및 액션 클래스를 호출하여 결과 페이지를 반환하는 컨트롤러(서블렛) 클래스 
+ * @author gagip
+ *
+ * @param <T> 화면 전환을 담당하는 ViewAction 클래스 
+ */
+public abstract class ControllerBase<T extends ViewActionBase> extends HttpServlet{
 	protected HashMap<String, Action> commandMap;
 	
+	/**
+	 * loadProperties(String propertiesFilePath, String viewActionClassPath) 메소드를 사용하여 프로퍼티 로드
+	 */
 	@Override
 	public abstract void init() throws ServletException;
 	
@@ -53,8 +62,8 @@ public abstract class ControllerBase extends HttpServlet{
 				Action actionInstance = (Action) actionClass.newInstance();		// 클래스 객체 생성
 				
 				if (className.equals(viewActionClassPath)) {
-					MemberViewAction memberView = (MemberViewAction) actionInstance;
-					memberView.setCommand(command);
+					T viewAction = (T) actionInstance;
+					viewAction.setCommand(command);
 				}
 				
 				commandMap.put(command, actionInstance);
@@ -71,6 +80,7 @@ public abstract class ControllerBase extends HttpServlet{
 	
 	public void doProcess(HttpServletRequest reqeust, HttpServletResponse response) throws ServletException, IOException {
 		// 넘어온 커맨드 추출
+
 		String requestURI = reqeust.getRequestURI();
 		int cmdIdx = requestURI.lastIndexOf("/")+1;
 		String command = requestURI.substring(cmdIdx);

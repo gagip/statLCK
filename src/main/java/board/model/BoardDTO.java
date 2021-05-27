@@ -1,4 +1,4 @@
-package board;
+package board.model;
 
 import java.util.Date;
 

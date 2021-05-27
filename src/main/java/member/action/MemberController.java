@@ -4,7 +4,7 @@ import javax.servlet.ServletException;
 
 import base.ControllerBase;
 
-public class MemberController extends ControllerBase{
+public class MemberController extends ControllerBase<MemberViewAction>{
 	private static final long serialVersionUID = 1L;
 
 	
