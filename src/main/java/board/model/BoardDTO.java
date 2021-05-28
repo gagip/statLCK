@@ -6,7 +6,7 @@ public class BoardDTO {
 	private int boardNum;
 	private String title;
 	private int cate;
-	private int author;
+	private String author;
 	private Date pubDate;
 	private Date modDate;
 	private int viewCnt;
@@ -35,10 +35,10 @@ public class BoardDTO {
 	public void setCate(int cate) {
 		this.cate = cate;
 	}
-	public int getAuthor() {
+	public String getAuthor() {
 		return author;
 	}
-	public void setAuthor(int author) {
+	public void setAuthor(String author) {
 		this.author = author;
 	}
 	public Date getPubDate() {

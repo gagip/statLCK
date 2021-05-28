@@ -144,6 +144,47 @@ public class MemberDAO extends DAOBase {
 
 	
 	/**
+	 * 회원 조회
+	 * @return
+	 */
+	public MemberDTO getMember(String id){
+		MemberDTO member = null;
+		
+		String sql = "SELECT * FROM Member WHERE id=?";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, id);
+			
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				member = new MemberDTO();
+				
+				member.setId(rs.getString("id"));
+				member.setPw(rs.getString("pw"));
+				member.setName(rs.getString("name"));
+				member.setTel(rs.getString("tel"));
+				member.setEmail(rs.getString("email"));
+				member.setAddress(rs.getString("address"));
+				member.setpImage(rs.getString("p_image"));
+				member.setCreateDate(rs.getDate("create_date"));
+				member.setUpdateDate(rs.getDate("update_date"));
+				member.setMember_num(rs.getInt("member_num"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("MemberDAO - 회원리스트 조회 실패");
+		}
+		
+		close(rs);
+		close(pstmt);
+		return member;
+	}
+	
+	
+	/**
 	 * 회원 리스트 조회
 	 * @return
 	 */

@@ -8,6 +8,7 @@ import base.Action;
 import base.ActionForward;
 import member.LoginState;
 import member.model.MemberDAO;
+import member.model.MemberDTO;
 
 public class MemberSigninAction implements Action {
 
@@ -25,9 +26,12 @@ public class MemberSigninAction implements Action {
 		
 		LoginState check = dao.login(id, pw);
 		
+		
 		switch (check) {
 		case SUCCESS:
-			session.setAttribute("sessionId", id);
+			MemberDTO member = dao.getMember(id);
+			session.setAttribute("sessionId", member.getId());
+			session.setAttribute("sessionMemberNum", member.getMemberNum());
 			
 			forward.setRedirect(true);
 			forward.setNextPath("index.me");

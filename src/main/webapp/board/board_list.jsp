@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +13,7 @@
   <link rel="stylesheet" href="<%=request.getContextPath()%>/static/css/bootstrap.css">
 </head>
 <body>
-    <jsp:include page="../common/header.jsp"/>
+  <jsp:include page="../common/header.jsp"/>
   
   <div class="container-fluid">
     <div class="row">
@@ -43,53 +44,27 @@
             </tr>
           </thead>
           <tbody>
+          
+            <c:forEach var="board" items="${boardList}">
             <tr>
-              <th scope="row">1</th>
-              <td>일반</td>
-              <td><a href="<%=request.getContextPath()%>/board/board_detail.jsp" class="text-decoration-none text-reset">일정 항의중이라는데 [1]</a></td>
-              <td>ㅇㅇ</td>
-              <td>05.19</td>
-              <td>39</td>
-              <td>0</td>
+              <th scope="row">${board.boardNum}</th>
+              <td>${board.cate}</td>
+              <td>
+                <a href="boardDetailAction.bo?num=${board.boardNum}&pageNum=${spage}" class="text-decoration-none text-reset">
+                ${board.title}
+                </a>
+              </td>
+              <td>${board.author}</td>
+              <td><fmt:formatDate value="${board.pubDate}" pattern="MM.dd"/></td>
+              <td>${board.viewCnt}</td>
+              <td>${board.likeCnt}</td>
             </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>일반</td>
-              <td>야 챌린저 생각보다 못하더라? [3]</td>
-              <td>ㅇㅅㅇ</td>
-              <td>05.19</td>
-              <td>37</td>
-              <td>0</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>일반</td>
-              <td>담원 결승 예상</td>
-              <td>ㅇㅅㅇ</td>
-              <td>05.19</td>
-              <td>20</td>
-              <td>0</td>
-            </tr>
-            <tr>
-              <th scope="row">4</th>
-              <td>일반</td>
-              <td>미드킨드는 뭐야</td>
-              <td>ㅇㅇ</td>
-              <td>05.15</td>
-              <td>6</td>
-              <td>1</td>
-            </tr>
-            <tr>
-              <th scope="row">5</th>
-              <td>일반</td>
-              <td>세나 선픽을 안한다고 ?</td>
-              <td>ㅇㅇ</td>
-              <td>05.15</td>
-              <td>9</td>
-              <td>2</td>
-            </tr>
+            </c:forEach>
           </tbody>
         </table>
+        
+        
+        
         <!-- 하단 -->
         <div class="container clearfix">
           <form class="row gy-2 gx-3 justify-content-center align-items-center align-self-center">
@@ -111,7 +86,7 @@
           
           
           </form>
-          <button type="button" class="btn btn-primary float-end col-1" onclick="location.href='<%=request.getContextPath()%>/board/board_write.jsp'">글쓰기</button>
+          <button type="button" class="btn btn-primary float-end col-1" onclick="location.href='board_write.bo'">글쓰기</button>
         </div>
         <div class="d-flex justify-content-center">
         1 2 3 4 5

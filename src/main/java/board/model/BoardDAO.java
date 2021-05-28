@@ -39,19 +39,20 @@ private static BoardDAO instance;
 	/**
 	 * 게시글 쓰기
 	 * @param board
-	 * @param memberNum
 	 */
-	public void insertBoard(BoardDTO board, int memberNum) {
-		String sql = "INSERT INTO Board (board_num, title, cate, author, content) "
+	public void insertBoard(BoardDTO board, int member_num) {
+		String sql = "INSERT INTO Board (board_num, title, cate, member_num, content) "
 				    + 			"VALUES (?, ?, ?, ?, ?) ";
 		
 		try {
+			conn.setAutoCommit(false);
+			
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setInt(1, getNum("Board", "board_num", conn));
 			pstmt.setString(2, board.getTitle());
 			pstmt.setInt(3, board.getCate());
-			pstmt.setInt(4, board.getAuthor());
+			pstmt.setInt(4, member_num);
 			pstmt.setString(5, board.getContent());
 			
 			if (pstmt.executeUpdate() > 0) {
@@ -101,7 +102,10 @@ private static BoardDAO instance;
 	 */
 	public BoardDTO getBoard(int boardNum) {
 		BoardDTO board = null;
-		String sql = "SELECT * FROM Board WHERE board_num=?";
+		String sql = "SELECT Board.*, Member.id AS author "
+					+ "FROM Board LEFT JOIN Member "
+					+ "ON Board.member_num=Member.member_num "
+					+ "WHERE board_num=?";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -111,9 +115,10 @@ private static BoardDAO instance;
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				board = new BoardDTO();
+				board.setBoardNum(rs.getInt("board_num"));
 				board.setTitle(rs.getString("title"));
 				board.setCate(rs.getInt("cate"));
-				board.setAuthor(rs.getInt("author"));
+				board.setAuthor(rs.getString("author"));
 				board.setLikeCnt(rs.getInt("like_cnt"));
 				board.setViewCnt(rs.getInt("view_cnt"));
 				board.setPubDate(rs.getDate("pub_date"));
@@ -138,7 +143,10 @@ private static BoardDAO instance;
 	 */
 	public ArrayList<BoardDTO> getBoardList() {
 		ArrayList<BoardDTO> boardList = new ArrayList<BoardDTO>();
-		String sql = "SELECT * FROM Board ORDER BY pub_date DESC";
+		String sql = 	"SELECT Board.*, Member.id AS author "
+					+ 	"FROM Board LEFT JOIN Member "
+					+ 	"ON Board.member_num=Member.member_num "
+					+ 	"ORDER BY Board.pub_date DESC";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -146,9 +154,10 @@ private static BoardDAO instance;
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				BoardDTO board = new BoardDTO();
+				board.setBoardNum(rs.getInt("board_num"));
 				board.setTitle(rs.getString("title"));
 				board.setCate(rs.getInt("cate"));
-				board.setAuthor(rs.getInt("author"));
+				board.setAuthor(rs.getString("author"));
 				board.setLikeCnt(rs.getInt("like_cnt"));
 				board.setViewCnt(rs.getInt("view_cnt"));
 				board.setPubDate(rs.getDate("pub_date"));
