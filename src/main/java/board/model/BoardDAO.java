@@ -245,6 +245,11 @@ private static BoardDAO instance;
 	}
 	
 	
+	/**
+	 * 게시글 리스트 길이 조회
+	 * @param listOpt
+	 * @return
+	 */
 	public int getBoardListLength(HashMap<String, Object> listOpt) {
 		int result = 0;
 		String opt = (String) listOpt.get("opt");
@@ -297,6 +302,36 @@ private static BoardDAO instance;
 		
 		close(rs);
 		close(pstmt);
+		return result;
+	}
+	
+	
+	
+	/**
+	 * 조회수 증가
+	 * @param boardNum
+	 * @return
+	 */
+	public boolean updateViewCount(int boardNum) {
+		boolean result = false;
+		String sql = 	"UPDATE Board SET view_cnt=view_cnt+1 "
+					+ 	"WHERE board_num=? ";
+		
+		try {
+			conn.setAutoCommit(false);
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, boardNum);
+			
+			if (pstmt.executeUpdate()>0) {
+				result = true;
+				commit(conn);
+			}
+		} catch (Exception e) {
+			rollback(conn);
+			e.printStackTrace();
+		}
+		
 		return result;
 	}
 }	
