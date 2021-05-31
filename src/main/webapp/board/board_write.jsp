@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+  request.setCharacterEncoding("UTF-8");
+%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,6 +22,13 @@
 
       <!-- main start -->
       <main class="col-md-10 col-xs-6 ms-auto px-4 mt-3">
+        <c:choose>
+        <c:when test="${sessionScope.sessionMemberNum == null}">
+        로그인해야 글쓰기 가능합니다
+        </c:when>
+        
+        <c:otherwise>
+        <!-- 게시글 작성 -->
         <h2>게시글 작성</h2>
         <hr>
         <form action="boardWriteAction.bo" method="POST">
@@ -49,6 +60,9 @@
             <input type="button" value="취소">
           </div>
         </form>
+        </c:otherwise>
+        </c:choose>
+        
       </main>
       <!-- main end -->
     </div>

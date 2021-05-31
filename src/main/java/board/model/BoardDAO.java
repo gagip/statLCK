@@ -5,8 +5,12 @@ import static util.DBUtil.*;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import javax.naming.NamingException;
 
 import base.DAOBase;
+import util.DBConnection;
 
 public class BoardDAO extends DAOBase {
 private static BoardDAO instance;
@@ -141,15 +145,81 @@ private static BoardDAO instance;
 	 * 게시글 전체 조회
 	 * @return
 	 */
-	public ArrayList<BoardDTO> getBoardList() {
+	public ArrayList<BoardDTO> getBoardList(HashMap<String, Object> listOpt) {
 		ArrayList<BoardDTO> boardList = new ArrayList<BoardDTO>();
-		String sql = 	"SELECT Board.*, Member.id AS author "
-					+ 	"FROM Board LEFT JOIN Member "
-					+ 	"ON Board.member_num=Member.member_num "
-					+ 	"ORDER BY Board.pub_date DESC";
+		
+		
+		String opt = (String) listOpt.get("opt");
+		String condition = (String) listOpt.get("condition");
+		int start = (Integer) listOpt.get("start");
 		
 		try {
-			pstmt = conn.prepareStatement(sql);
+			
+			if (opt == null) {
+				String sql = 	"SELECT * "
+							+ 	"FROM	(SELECT ROW_NUMBER() OVER (ORDER BY Board.pub_date DESC) AS rnum, "
+							+ 	"				Board.*, Member.id AS author "
+							+ 	"		FROM Board LEFT JOIN Member "
+							+ 	"		ON Board.member_num=Member.member_num) "
+							+ 	"WHERE ?<=rnum AND rnum<=? ";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, start);
+				pstmt.setInt(2, start+9);
+			} else if (opt.equals("0")) {	// 제목
+				String sql = 	"SELECT * "
+							+ 	"FROM 	(SELECT ROW_NUMBER() OVER (ORDER BY Board.pub_date DESC) AS rnum, "
+							+ 	"				Board.*, Member.id AS author "
+							+ 	"		FROM Board LEFT JOIN Member "
+							+ 	"		ON Board.member_num=Member.member_num "
+							+ 	"		WHERE Board.title LIKE ? "
+							+ 	"WHERE ?<=rnum AND rnum<=?";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%"+condition+"%");
+				pstmt.setInt(2, start);
+				pstmt.setInt(3, start+9);
+			} else if (opt.equals("1")) {	// 글쓴이 아이디
+				String sql = 	"SELECT * "
+							+ 	"FROM 	(SELECT ROW_NUMBER() OVER (ORDER BY Board.pub_date DESC) AS rnum,"
+							+ 	"		Board.*, Member.id AS author "
+							+ 	"		FROM Board LEFT JOIN Member "
+							+ 	"		ON Board.member_num=Member.member_num "
+							+ 	"		WHERE Member.id LIKE ? "
+							+ 	"WHERE ?<=rnum AND rnum<=?";
+			
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%"+condition+"%");
+				pstmt.setInt(2, start);
+				pstmt.setInt(3, start+9);
+			} else if (opt.equals("2")) {	// 내용
+				String sql = 	"SELECT * "
+						+ 	"FROM 	(SELECT ROW_NUMBER() OVER (ORDER BY Board.pub_date DESC) AS rnum, "
+						+ 	"		Board.*, Member.id AS author "
+						+ 	"		FROM Board LEFT JOIN Member "
+						+ 	"		ON Board.member_num=Member.member_num "
+						+ 	"		WHERE Board.content LIKE ? "
+						+ 	"WHERE ?<=rnum AND rnum<=?";
+		
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%"+condition+"%");
+				pstmt.setInt(2, start);
+				pstmt.setInt(3, start+9);
+			} else if (opt.equals("3")) {	// 제목 + 내용
+					String sql = 	"SELECT * "
+							+ 	"FROM 	(SELECT ROW_NUMBER() OVER (ORDER BY Board.pub_date DESC) AS rnum,"
+							+ 	"		Board.*, Member.id AS author "
+							+ 	"		FROM Board LEFT JOIN Member "
+							+ 	"		ON Board.member_num=Member.member_num "
+							+ 	"		WHERE Board.title LIKE ? OR Board.content LIKE ? "
+							+ 	"WHERE ?<=rnum AND rnum<=?";
+			
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%"+condition+"%");
+				pstmt.setString(2, "%"+condition+"%");
+				pstmt.setInt(3, start);
+				pstmt.setInt(4, start+9);
+			}
 			
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -164,7 +234,6 @@ private static BoardDAO instance;
 				
 				boardList.add(board);
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.out.println("BoardDAO - 게시글 전체 조회 실패");
@@ -174,4 +243,60 @@ private static BoardDAO instance;
 		close(pstmt);
 		return boardList;
 	}
-}
+	
+	
+	public int getBoardListLength(HashMap<String, Object> listOpt) {
+		int result = 0;
+		String opt = (String) listOpt.get("opt");
+		String condition = (String) listOpt.get("condition");
+		
+		try {
+			if (opt == null) {
+				String sql = "SELECT COUNT(*) FROM Board";
+				
+				pstmt = conn.prepareStatement(sql);
+			} else if (opt == "0") {
+				String sql = 	"SELECT COUNT(*) "
+							+ "	FROM Board "
+							+ "	WHERE title LIKE ?";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%"+condition+"%");
+			} else if (opt == "1") {
+				String sql =	"SELECT COUNT(*) "
+							+ "	FROM Board LEFT JOIN Member "
+							+ "	ON Board.member_num=Member.member_num "
+							+ " WHERE Member.id LIKE ?";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%"+condition+"%");
+			} else if (opt == "2") {
+				String sql = 	"SELECT COUNT(*) "
+							+ "	FROM Board "
+							+ " WHERE content LIKE ?";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%"+condition+"%");
+			} else if (opt == "3") {
+				String sql =	"SELECT COUNT(*) "
+							+ "	FROM Board LEFT JOIN Member "
+							+ "	ON Board.member_num=Member.member_num "
+							+ " WHERE Member.id LIKE ? OR Board.title LIKE ? ";
+			
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%"+condition+"%");
+				pstmt.setString(2, "%"+condition+"%");
+			}
+			
+			rs = pstmt.executeQuery();
+			if (rs.next())		result = rs.getInt(1); 
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		close(rs);
+		close(pstmt);
+		return result;
+	}
+}	

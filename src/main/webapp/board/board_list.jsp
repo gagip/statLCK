@@ -67,20 +67,20 @@
         
         <!-- 하단 -->
         <div class="container clearfix">
-          <form class="row gy-2 gx-3 justify-content-center align-items-center align-self-center">
+          <form class="row gy-2 gx-3 justify-content-center align-items-center align-self-center" action="boardListAction.bo" method="GET">
           <div class="col-auto">
-            <select class="form-select">
-              <option selected>제목</option>
-              <option value="1">내용</option>
-              <option value="2">글쓴이</option>
+            <select class="form-select" name="opt">
+              <option value="0" selected>제목</option>
+              <option value="1">글쓴이</option>
+              <option value="2">내용</option>
               <option value="3">제목+내용</option>
             </select>
           </div>
           
           <div class="col-auto">
             <div class="input-group align-items-center">
-              <input type="text" class="form-control" placeholder="" aria-label="Recipient's username" aria-describedby="button-addon2">
-              <button class="btn btn-outline-secondary" type="button" id="button-addon2">검색</button>
+              <input type="text" class="form-control" name="condition" placeholder="" aria-label="Recipient's username" aria-describedby="button-addon2">
+              <button class="btn btn-outline-secondary" type="submit" id="button-addon2">검색</button>
             </div>
           </div>
           
@@ -88,8 +88,24 @@
           </form>
           <button type="button" class="btn btn-primary float-end col-1" onclick="location.href='board_write.bo'">글쓰기</button>
         </div>
+        <!-- 페이지 넘버링 -->
         <div class="d-flex justify-content-center">
-        1 2 3 4 5
+        <c:if test="${startPage != 1}">
+          <a href="boardListAction.bo?page=${startPage-1}">[이전]</a>
+        </c:if>
+        
+        <c:forEach var="pageNum" begin="${startPage}" end="${endPage}">
+          <c:if test="${pageNum==spage}">
+            <b>${pageNum}</b>&nbsp;
+          </c:if>
+          <c:if test="${pageNum!=spage}">
+            <a href="boardListAction.bo?page=${pageNum}" class="text-decoration-none text-reset">${pageNum}&nbsp;</a>
+          </c:if>
+        </c:forEach>
+        
+        <c:if test="${endPage != maxPage}">
+          <a href="boardListAction.bo?page=${endPage+1}">[다음]</a>
+        </c:if>
         </div>
         
       </main>

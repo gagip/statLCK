@@ -14,6 +14,7 @@ public class BoardWriteAction implements Action {
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ActionForward forward = new ActionForward();
 		
+		request.setCharacterEncoding("UTF-8");
 		int memberNum = Integer.parseInt(request.getParameter("member_num"));
 		int cate = Integer.parseInt(request.getParameter("cate"));
 		String title = request.getParameter("title");
