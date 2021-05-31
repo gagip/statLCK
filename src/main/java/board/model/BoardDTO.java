@@ -5,7 +5,7 @@ import java.util.Date;
 public class BoardDTO {
 	private int boardNum;
 	private String title;
-	private int cate;
+	private String cate;
 	private String author;
 	private Date pubDate;
 	private Date modDate;
@@ -29,10 +29,10 @@ public class BoardDTO {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public int getCate() {
+	public String getCate() {
 		return cate;
 	}
-	public void setCate(int cate) {
+	public void setCate(String cate) {
 		this.cate = cate;
 	}
 	public String getAuthor() {

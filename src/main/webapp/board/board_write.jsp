@@ -36,9 +36,9 @@
           <div class="mb-3">
             <label for="cate" class="form-label">글성격</label>
             <select class="form-select" id="cate" name="cate">
-              <option value="1">공지</option>
-              <option value="2" selected>일반</option>
-              <option value="3">질문</option>
+              <option value="공지">공지</option>
+              <option value="일반" selected>일반</option>
+              <option value="질문">질문</option>
             </select>
             <div class="form-text fst-italic"></div>
           </div>

@@ -55,7 +55,7 @@ private static BoardDAO instance;
 			
 			pstmt.setInt(1, getNum("Board", "board_num", conn));
 			pstmt.setString(2, board.getTitle());
-			pstmt.setInt(3, board.getCate());
+			pstmt.setString(3, board.getCate());
 			pstmt.setInt(4, member_num);
 			pstmt.setString(5, board.getContent());
 			
@@ -121,7 +121,7 @@ private static BoardDAO instance;
 				board = new BoardDTO();
 				board.setBoardNum(rs.getInt("board_num"));
 				board.setTitle(rs.getString("title"));
-				board.setCate(rs.getInt("cate"));
+				board.setCate(rs.getString("cate"));
 				board.setAuthor(rs.getString("author"));
 				board.setLikeCnt(rs.getInt("like_cnt"));
 				board.setViewCnt(rs.getInt("view_cnt"));
@@ -172,7 +172,7 @@ private static BoardDAO instance;
 							+ 	"				Board.*, Member.id AS author "
 							+ 	"		FROM Board LEFT JOIN Member "
 							+ 	"		ON Board.member_num=Member.member_num "
-							+ 	"		WHERE Board.title LIKE ? "
+							+ 	"		WHERE Board.title LIKE ?) "
 							+ 	"WHERE ?<=rnum AND rnum<=?";
 				
 				pstmt = conn.prepareStatement(sql);
@@ -185,7 +185,7 @@ private static BoardDAO instance;
 							+ 	"		Board.*, Member.id AS author "
 							+ 	"		FROM Board LEFT JOIN Member "
 							+ 	"		ON Board.member_num=Member.member_num "
-							+ 	"		WHERE Member.id LIKE ? "
+							+ 	"		WHERE Member.id LIKE ?) "
 							+ 	"WHERE ?<=rnum AND rnum<=?";
 			
 				pstmt = conn.prepareStatement(sql);
@@ -198,7 +198,7 @@ private static BoardDAO instance;
 						+ 	"		Board.*, Member.id AS author "
 						+ 	"		FROM Board LEFT JOIN Member "
 						+ 	"		ON Board.member_num=Member.member_num "
-						+ 	"		WHERE Board.content LIKE ? "
+						+ 	"		WHERE Board.content LIKE ?) "
 						+ 	"WHERE ?<=rnum AND rnum<=?";
 		
 				pstmt = conn.prepareStatement(sql);
@@ -211,7 +211,7 @@ private static BoardDAO instance;
 							+ 	"		Board.*, Member.id AS author "
 							+ 	"		FROM Board LEFT JOIN Member "
 							+ 	"		ON Board.member_num=Member.member_num "
-							+ 	"		WHERE Board.title LIKE ? OR Board.content LIKE ? "
+							+ 	"		WHERE Board.title LIKE ? OR Board.content LIKE ?) "
 							+ 	"WHERE ?<=rnum AND rnum<=?";
 			
 				pstmt = conn.prepareStatement(sql);
@@ -226,7 +226,7 @@ private static BoardDAO instance;
 				BoardDTO board = new BoardDTO();
 				board.setBoardNum(rs.getInt("board_num"));
 				board.setTitle(rs.getString("title"));
-				board.setCate(rs.getInt("cate"));
+				board.setCate(rs.getString("cate"));
 				board.setAuthor(rs.getString("author"));
 				board.setLikeCnt(rs.getInt("like_cnt"));
 				board.setViewCnt(rs.getInt("view_cnt"));
@@ -238,7 +238,8 @@ private static BoardDAO instance;
 			e.printStackTrace();
 			System.out.println("BoardDAO - 게시글 전체 조회 실패");
 		}
-		
+
+
 		close(rs);
 		close(pstmt);
 		return boardList;
@@ -260,14 +261,14 @@ private static BoardDAO instance;
 				String sql = "SELECT COUNT(*) FROM Board";
 				
 				pstmt = conn.prepareStatement(sql);
-			} else if (opt == "0") {
+			} else if (opt.equals("0")) {
 				String sql = 	"SELECT COUNT(*) "
 							+ "	FROM Board "
 							+ "	WHERE title LIKE ?";
 				
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, "%"+condition+"%");
-			} else if (opt == "1") {
+			} else if (opt.equals("1")) {
 				String sql =	"SELECT COUNT(*) "
 							+ "	FROM Board LEFT JOIN Member "
 							+ "	ON Board.member_num=Member.member_num "
@@ -275,14 +276,14 @@ private static BoardDAO instance;
 				
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, "%"+condition+"%");
-			} else if (opt == "2") {
+			} else if (opt.equals("2")) {
 				String sql = 	"SELECT COUNT(*) "
 							+ "	FROM Board "
 							+ " WHERE content LIKE ?";
 				
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, "%"+condition+"%");
-			} else if (opt == "3") {
+			} else if (opt.equals("3")) {
 				String sql =	"SELECT COUNT(*) "
 							+ "	FROM Board LEFT JOIN Member "
 							+ "	ON Board.member_num=Member.member_num "
@@ -299,7 +300,8 @@ private static BoardDAO instance;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
+
 		close(rs);
 		close(pstmt);
 		return result;
@@ -331,6 +333,7 @@ private static BoardDAO instance;
 			rollback(conn);
 			e.printStackTrace();
 		}
+		
 		
 		return result;
 	}
