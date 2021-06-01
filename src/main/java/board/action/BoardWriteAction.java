@@ -18,7 +18,7 @@ public class BoardWriteAction implements Action {
 		ActionForward forward = new ActionForward();
 		
 		request.setCharacterEncoding("UTF-8");
-		int memberNum = Integer.parseInt(request.getParameter("member_num"));
+		int memberNum = Integer.parseInt(request.getParameter("memberNum"));
 		String cate = request.getParameter("cate");
 		String title = request.getParameter("title");
 		String content = request.getParameter("content");

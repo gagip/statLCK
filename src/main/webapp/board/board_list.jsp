@@ -55,7 +55,7 @@
                 ${board.title}
                 </a>
               </td>
-              <td>${board.author}</td>
+              <td><a href="memberProfileAction.me?memberId=${board.author}" class="text-decoration-none text-reset">${board.author}</a></td>
               <td><fmt:formatDate value="${board.pubDate}" pattern="MM.dd"/></td>
               <td>${board.viewCnt}</td>
               <!-- <td>${board.likeCnt}</td> -->

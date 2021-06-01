@@ -34,7 +34,7 @@
         <!-- 새롭게 게시글 작성 -->
         <c:if test="${board == null}">
         <form action="boardWriteAction.bo" method="POST">
-          <input type="hidden" name="member_num" value="${sessionScope.sessionMemberNum}">
+          <input type="hidden" name="memberNum" value="${sessionScope.sessionMemberNum}">
           <div class="mb-3">
             <label for="cate" class="form-label">글성격</label>
             <select class="form-select" id="cate" name="cate">
@@ -66,7 +66,8 @@
         <!-- 기존 게시글 수정 -->
         <c:if test="${board != null}">
         <form action="boardUpdateAction.bo" method="POST">
-          <input type="hidden" name="member_num" value="${sessionScope.sessionMemberNum}">
+          <input type="hidden" name="boardNum" value="${board.boardNum}">
+          <input type="hidden" name="memberNum" value="${sessionScope.sessionMemberNum}">
           <div class="mb-3">
             <label for="cate" class="form-label">글성격</label>
             <select class="form-select" id="cate" name="cate">

@@ -15,7 +15,7 @@
         <a class="nav-link" href="signin.me">Login</a>
       </c:if>
       <c:if test="${sessionScope.sessionId != null}">
-        <a class="nav-link" href="#">${sessionScope.sessionId}</a>
+        <a class="nav-link" href="memberProfileAction.me?memberId=${sessionScope.sessionId}">${sessionScope.sessionId}</a>
       </c:if>
     </li>
   </ul>

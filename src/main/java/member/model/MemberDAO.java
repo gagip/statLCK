@@ -78,7 +78,7 @@ public class MemberDAO extends DAOBase {
 	 * 로그인
 	 * @param id
 	 * @param pw
-	 * @return 1=로그인 성공; 0=비밀번호 불일치; -1=존재하지 않는 아이디;
+	 * @return SUCCESS=로그인 성공; PW_MISMATCH=비밀번호 불일치; NON_EXIST_ID=존재하지 않는 아이디;
 	 */
 	public LoginState login(String id, String pw) {
 		String sql = "SELECT id, pw FROM Member WHERE id=?";
@@ -86,7 +86,6 @@ public class MemberDAO extends DAOBase {
 		try {
 			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(sql);
-			
 			pstmt.setString(1, id);
 			
 			rs = pstmt.executeQuery();
