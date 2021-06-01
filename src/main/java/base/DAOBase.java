@@ -18,7 +18,7 @@ public abstract class DAOBase {
 	}
 	
 	
-	public void close() {
+	protected void close() {
 		try {
             if ( pstmt != null ){ pstmt.close(); pstmt=null; }
             if ( conn != null ){ conn.close(); conn=null;    }
@@ -26,5 +26,23 @@ public abstract class DAOBase {
         } catch (Exception e) {
             e.printStackTrace();
         }
+	}
+	
+	
+	protected void commit() {
+		try {
+			conn.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	protected void rollback() {
+		try {
+			conn.rollback();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

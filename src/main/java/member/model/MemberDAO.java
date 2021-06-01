@@ -1,9 +1,5 @@
 package member.model;
 
-import static util.DBUtil.*;
-
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import base.DAOBase;
@@ -66,9 +62,10 @@ public class MemberDAO extends DAOBase {
 			pstmt.setString(8, member.getpImage());
 			
 			if (pstmt.executeUpdate() > 0) {
-				commit(conn);
+				commit();
 			}
 		} catch (Exception e) {
+			rollback();
 			System.out.println("MemberDAO - 회원가입 실패");
 			e.printStackTrace();
 		}
@@ -140,9 +137,10 @@ public class MemberDAO extends DAOBase {
 			pstmt.setString(7, member.getId());
 			
 			if (pstmt.executeUpdate() > 0) {
-				commit(conn);
+				commit();
 			}
 		} catch (Exception e) {
+			rollback();
 			System.out.println("MemberDAO - 회원정보 업데이트 실패");
 			e.printStackTrace();
 		}
@@ -285,9 +283,10 @@ public class MemberDAO extends DAOBase {
 			pstmt.setString(1, id);
 			
 			if (pstmt.executeUpdate() > 0) {
-				commit(conn);
+				commit();
 			}
 		} catch (Exception e) {
+			rollback();
 			e.printStackTrace();
 			System.out.println("MemberDAO - 회원 탈퇴 실패");
 		}
@@ -335,11 +334,11 @@ public class MemberDAO extends DAOBase {
 			
 			if (pstmt.executeUpdate() > 0) {
 				result = true;
-				commit(conn);
+				commit();
 			}
 			
 		} catch (Exception e) {
-			rollback(conn);
+			rollback();
 			e.printStackTrace();
 		}
 		

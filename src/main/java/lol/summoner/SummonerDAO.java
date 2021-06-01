@@ -1,9 +1,5 @@
 package lol.summoner;
 
-import static util.DBUtil.*;
-
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import base.DAOBase;
 import util.DBConnection;
@@ -68,10 +64,11 @@ public class SummonerDAO extends DAOBase{
 			pstmt.setLong(7, summonerDTO.getSummonerLevel());
 			
 			if (pstmt.executeUpdate() > 0) {
-				commit(conn);
+				commit();
 				System.out.println("SummonerDAO - 삽입 성공");
 			}
 		} catch (Exception e) {
+			rollback();
 			e.printStackTrace();
 		}
 		

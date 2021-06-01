@@ -1,14 +1,8 @@
 package board.model;
 
-import static util.DBUtil.*;
 
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.naming.NamingException;
-
 import base.DAOBase;
 import util.DBConnection;
 
@@ -67,13 +61,14 @@ private static BoardDAO instance;
 			
 			if (pstmt.executeUpdate() > 0) {
 				result = true;
-				commit(conn);
+				commit();
 			} 
 			
 		} catch (Exception e) {
+			rollback();
 			e.printStackTrace();
 			System.out.println("BoardDAO - 게시글 쓰기 실패");
-			rollback(conn);
+			
 		}
 		
 		close();
@@ -100,10 +95,10 @@ private static BoardDAO instance;
 			
 			if (pstmt.executeUpdate() > 0) {
 				result = true;
-				commit(conn);
+				commit();
 			}
 		} catch (Exception e) {
-			rollback(conn);
+			rollback();
 			e.printStackTrace();
 		}
 		
@@ -131,11 +126,11 @@ private static BoardDAO instance;
 			
 			if (pstmt.executeUpdate() > 0) {
 				result = true;
-				commit(conn);
+				commit();
 			}
 			
 		} catch (Exception e) {
-			rollback(conn);
+			rollback();
 			e.printStackTrace();
 			System.out.println("BoardDAO - 게시글 삭제 실패");
 		}
@@ -375,10 +370,10 @@ private static BoardDAO instance;
 			
 			if (pstmt.executeUpdate()>0) {
 				result = true;
-				commit(conn);
+				commit();
 			}
 		} catch (Exception e) {
-			rollback(conn);
+			rollback();
 			e.printStackTrace();
 		}
 		
