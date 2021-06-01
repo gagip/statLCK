@@ -71,6 +71,23 @@
     </div>  
   </div>
 </div>
+
+<script>
+  var error = "${requestScope.error}";
+  
+  if (error) {
+    switch (error) {
+      case "pw_mismatch":
+        alert("비밀번호가 일치하지 않습니다.");
+        break;
+      case "non_exist_id":
+        alert("존재하지 않는 아이디입니다.");
+        break;
+      default:
+        break;
+    }
+  }
+</script>
 </body>
 
 </html>

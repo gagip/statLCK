@@ -16,21 +16,6 @@ public class BoardDAO extends DAOBase {
 private static BoardDAO instance;
 	
 	private BoardDAO() {
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			System.out.println("드라이버 로드 성공");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			System.out.println("드라이버 로드 실패");
-		}
-		
-		try {
-			conn = DriverManager.getConnection(URL, USERID, PASSWORD);
-			System.out.println("DB 연결 성공");
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("DB 연결 실패");
-		}
 	}
 	
 	public static BoardDAO getInstance() {
@@ -44,16 +29,17 @@ private static BoardDAO instance;
 		int result = 1;
 		String sql = "SELECT board_num_seq.NEXTVAL FROM DUAL";
 		try {
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			
 			rs = pstmt.executeQuery();
 			
 			if (rs.next())		result = rs.getInt(1);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		
+		close();
 		return result;
 	}
 	
@@ -62,11 +48,13 @@ private static BoardDAO instance;
 	 * 게시글 쓰기
 	 * @param board
 	 */
-	public void insertBoard(BoardDTO board, int member_num) {
+	public boolean insertBoard(BoardDTO board, int member_num) {
+		boolean result = false;
 		String sql = "INSERT INTO Board (board_num, title, cate, member_num, content) "
 				    + 			"VALUES (?, ?, ?, ?, ?) ";
 		
 		try {
+			conn = DBConnection.getConnection();
 			conn.setAutoCommit(false);
 			
 			pstmt = conn.prepareStatement(sql);
@@ -78,16 +66,18 @@ private static BoardDAO instance;
 			pstmt.setString(5, board.getContent());
 			
 			if (pstmt.executeUpdate() > 0) {
+				result = true;
 				commit(conn);
 			} 
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("BoardDAO - 게시글 쓰기 실패");
 			rollback(conn);
 		}
 		
-		close(pstmt);
+		close();
+		return result;
 	}
 	
 	
@@ -99,6 +89,7 @@ private static BoardDAO instance;
 					+ 	"WHERE board_num = ?";
 		
 		try {
+			conn = DBConnection.getConnection();
 			conn.setAutoCommit(false);
 			
 			pstmt = conn.prepareStatement(sql);
@@ -111,13 +102,13 @@ private static BoardDAO instance;
 				result = true;
 				commit(conn);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			rollback(conn);
 			e.printStackTrace();
 		}
 		
 		
-		close(pstmt);
+		close();
 		return result;
 	}
 	
@@ -131,6 +122,7 @@ private static BoardDAO instance;
 		boolean result = false;
 		
 		try {
+			conn = DBConnection.getConnection();
 			conn.setAutoCommit(false);
 			
 			pstmt = conn.prepareStatement(sql);
@@ -142,14 +134,14 @@ private static BoardDAO instance;
 				commit(conn);
 			}
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			rollback(conn);
 			e.printStackTrace();
 			System.out.println("BoardDAO - 게시글 삭제 실패");
 		}
 		
 		
-		close(pstmt);
+		close();
 		return result;
 	}
 	
@@ -167,6 +159,7 @@ private static BoardDAO instance;
 					+ "WHERE board_num=?";
 		
 		try {
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setInt(1, boardNum);
@@ -185,12 +178,12 @@ private static BoardDAO instance;
 				board.setContent(rs.getString("content"));
 			}
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("BoardDAO - 게시글 조회 실패");
 		}
 		
-		close(pstmt);
+		close();
 		return board;
 	}
 	
@@ -209,7 +202,7 @@ private static BoardDAO instance;
 		int start = (Integer) listOpt.get("start");
 		
 		try {
-			
+			conn = DBConnection.getConnection();
 			if (opt == null) {
 				String sql = 	"SELECT * "
 							+ 	"FROM	(SELECT ROW_NUMBER() OVER (ORDER BY Board.pub_date DESC) AS rnum, "
@@ -289,14 +282,13 @@ private static BoardDAO instance;
 				
 				boardList.add(board);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("BoardDAO - 게시글 전체 조회 실패");
 		}
 
 
-		close(rs);
-		close(pstmt);
+		close();
 		return boardList;
 	}
 	
@@ -312,6 +304,7 @@ private static BoardDAO instance;
 		String condition = (String) listOpt.get("condition");
 		
 		try {
+			conn = DBConnection.getConnection();
 			if (opt == null) {
 				String sql = "SELECT COUNT(*) FROM Board";
 				
@@ -357,8 +350,7 @@ private static BoardDAO instance;
 		}
 
 
-		close(rs);
-		close(pstmt);
+		close();
 		return result;
 	}
 	
@@ -375,6 +367,7 @@ private static BoardDAO instance;
 					+ 	"WHERE board_num=? ";
 		
 		try {
+			conn = DBConnection.getConnection();
 			conn.setAutoCommit(false);
 			
 			pstmt = conn.prepareStatement(sql);
@@ -389,7 +382,7 @@ private static BoardDAO instance;
 			e.printStackTrace();
 		}
 		
-		
+		close();
 		return result;
 	}
 }	

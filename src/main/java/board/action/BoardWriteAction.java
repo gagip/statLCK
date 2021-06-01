@@ -7,6 +7,9 @@ import base.Action;
 import base.ActionForward;
 import board.model.BoardDAO;
 import board.model.BoardDTO;
+import member.PointManager;
+import member.model.MemberDAO;
+import member.model.MemberDTO;
 
 public class BoardWriteAction implements Action {
 
@@ -27,11 +30,16 @@ public class BoardWriteAction implements Action {
 		board.setCate(cate);
 		board.setTitle(title);
 		board.setContent(content);
+		boolean result = boardDAO.insertBoard(board, memberNum);
 		
-		boardDAO.insertBoard(board, memberNum);
 		
-		forward.setRedirect(true);
-		forward.setNextPath("boardDetailAction.bo?boardNum="+board.getBoardNum());
+		if (result) {
+			PointManager pm = PointManager.getInstance();
+			pm.addPoint(memberNum, PointManager.BOARD_WRITE_POINT);
+			
+			forward.setRedirect(true);
+			forward.setNextPath("boardDetailAction.bo?boardNum="+board.getBoardNum());
+		}
 		
 		
 		return forward;

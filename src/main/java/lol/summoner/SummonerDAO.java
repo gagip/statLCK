@@ -6,27 +6,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import base.DAOBase;
+import util.DBConnection;
 
 public class SummonerDAO extends DAOBase{
 	
 	private static SummonerDAO instance;
 	
 	private SummonerDAO() {
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			System.out.println("드라이버 로드 성공");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			System.out.println("드라이버 로드 실패");
-		}
-		
-		try {
-			conn = DriverManager.getConnection(URL, USERID, PASSWORD);
-			System.out.println("DB 연결 성공");
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("DB 연결 실패");
-		}
 	}
 	
 	public static SummonerDAO getInstance() {
@@ -40,6 +26,7 @@ public class SummonerDAO extends DAOBase{
 		ArrayList<SummonerDTO> summonerList = new ArrayList<SummonerDTO>();
 		
 		try {
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			
@@ -56,12 +43,11 @@ public class SummonerDAO extends DAOBase{
 				
 				summonerList.add(summonerDTO);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		close(rs);
-		close(pstmt);
+		close();
 		return summonerList;
 	}
 	
@@ -70,6 +56,7 @@ public class SummonerDAO extends DAOBase{
 				+ "				VALUES (?, ?, ?, ?, ?, ?, ?)";
 		
 		try {
+			conn = DBConnection.getConnection();
 			conn.setAutoCommit(false);
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, summonerDTO.getAccountId());
@@ -84,10 +71,10 @@ public class SummonerDAO extends DAOBase{
 				commit(conn);
 				System.out.println("SummonerDAO - 삽입 성공");
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		close(pstmt);
+		close();
 	}
 }

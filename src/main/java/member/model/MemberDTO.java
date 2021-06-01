@@ -13,6 +13,7 @@ public class MemberDTO {
 	private String pImage;
 	private Date createDate;
 	private Date updateDate;
+	private int point;
 	
 	
 	
@@ -20,7 +21,7 @@ public class MemberDTO {
 	public int getMemberNum() {
 		return memberNum;
 	}
-	public void setMember_num(int memberNum) {
+	public void setMemberNum(int memberNum) {
 		this.memberNum = memberNum;
 	}
 	public String getId() {
@@ -76,5 +77,11 @@ public class MemberDTO {
 	}
 	public void setUpdateDate(Date updateDate) {
 		this.updateDate = updateDate;
+	}
+	public int getPoint() {
+		return point;
+	}
+	public void setPoint(int point) {
+		this.point = point;
 	}
 }

@@ -19,7 +19,7 @@ public class MemberSignupAction implements Action{
 		MemberDAO dao = MemberDAO.getInstance();
 		
 		MemberDTO member = new MemberDTO();
-		member.setMember_num(dao.getSeq());
+		member.setMemberNum(dao.getSeq());
 		member.setId(request.getParameter("id"));
 		member.setPw(request.getParameter("pw"));
 		member.setName(request.getParameter("name"));

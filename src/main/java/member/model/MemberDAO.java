@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import base.DAOBase;
 import member.LoginState;
+import util.DBConnection;
 
 
 
@@ -15,21 +16,6 @@ public class MemberDAO extends DAOBase {
 	private static MemberDAO instance;
 	
 	private MemberDAO() {
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			System.out.println("드라이버 로드 성공");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			System.out.println("드라이버 로드 실패");
-		}
-		
-		try {
-			conn = DriverManager.getConnection(URL, USERID, PASSWORD);
-			System.out.println("DB 연결 성공");
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.out.println("DB 연결 실패");
-		}
 	}
 	
 	public static MemberDAO getInstance() {
@@ -45,11 +31,12 @@ public class MemberDAO extends DAOBase {
 		String sql = "SELECT member_num_seq.NEXTVAL FROM DUAL ";
 		
 		try {
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			
 			rs = pstmt.executeQuery();
 			if(rs.next())		result=rs.getInt(1);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
@@ -65,6 +52,7 @@ public class MemberDAO extends DAOBase {
 					+ "				VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		try {
+			conn = DBConnection.getConnection();
 			conn.setAutoCommit(false);
 			
 			pstmt = conn.prepareStatement(sql);
@@ -80,12 +68,12 @@ public class MemberDAO extends DAOBase {
 			if (pstmt.executeUpdate() > 0) {
 				commit(conn);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			System.out.println("MemberDAO - 회원가입 실패");
 			e.printStackTrace();
 		}
 		
-		close(pstmt);
+		close();
 	}
 	
 	
@@ -99,6 +87,7 @@ public class MemberDAO extends DAOBase {
 		String sql = "SELECT id, pw FROM Member WHERE id=?";
 		
 		try {
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, id);
@@ -116,12 +105,13 @@ public class MemberDAO extends DAOBase {
 					return LoginState.PW_MISMATCH;
 				}
 			} 
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("MemberDAO - 로그인 실패");
 		}
 		
 		
+		close();
 		System.out.println("MemberDAO - 존재하지 않는 아이디");
 		return LoginState.NON_EXIST_ID;
 	}
@@ -136,6 +126,7 @@ public class MemberDAO extends DAOBase {
 					+ "WHERE id=?";
 		
 		try {
+			conn = DBConnection.getConnection();
 			conn.setAutoCommit(false);
 			
 			pstmt = conn.prepareStatement(sql);
@@ -151,12 +142,12 @@ public class MemberDAO extends DAOBase {
 			if (pstmt.executeUpdate() > 0) {
 				commit(conn);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			System.out.println("MemberDAO - 회원정보 업데이트 실패");
 			e.printStackTrace();
 		}
 		
-		close(pstmt);
+		close();
 	}
 
 	
@@ -170,6 +161,7 @@ public class MemberDAO extends DAOBase {
 		String sql = "SELECT * FROM Member WHERE id=?";
 		
 		try {
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, id);
@@ -188,18 +180,54 @@ public class MemberDAO extends DAOBase {
 				member.setpImage(rs.getString("p_image"));
 				member.setCreateDate(rs.getDate("create_date"));
 				member.setUpdateDate(rs.getDate("update_date"));
-				member.setMember_num(rs.getInt("member_num"));
+				member.setMemberNum(rs.getInt("member_num"));
+				member.setPoint(rs.getInt("m_point"));
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("MemberDAO - 회원리스트 조회 실패");
 		}
 		
-		close(rs);
-		close(pstmt);
+		close();
 		return member;
 	}
 	
+	public MemberDTO getMember(int memberNum){
+		MemberDTO member = null;
+		
+		String sql = "SELECT * FROM Member WHERE member_num=?";
+		
+		try {
+			conn = DBConnection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, memberNum);
+			
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				member = new MemberDTO();
+				
+				member.setId(rs.getString("id"));
+				member.setPw(rs.getString("pw"));
+				member.setName(rs.getString("name"));
+				member.setTel(rs.getString("tel"));
+				member.setEmail(rs.getString("email"));
+				member.setAddress(rs.getString("address"));
+				member.setpImage(rs.getString("p_image"));
+				member.setCreateDate(rs.getDate("create_date"));
+				member.setUpdateDate(rs.getDate("update_date"));
+				member.setMemberNum(rs.getInt("member_num"));
+				member.setPoint(rs.getInt("m_point"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("MemberDAO - 회원리스트 조회 실패");
+		}
+		
+		close();
+		return member;
+	}
 	
 	/**
 	 * 회원 리스트 조회
@@ -211,6 +239,7 @@ public class MemberDAO extends DAOBase {
 		String sql = "SELECT * FROM Member ORDER BY create_date DESC";
 		
 		try {
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			
 			rs = pstmt.executeQuery();
@@ -227,17 +256,17 @@ public class MemberDAO extends DAOBase {
 				member.setpImage(rs.getString("p_image"));
 				member.setCreateDate(rs.getDate("create_date"));
 				member.setUpdateDate(rs.getDate("update_date"));
-				member.setMember_num(rs.getInt("member_num"));
+				member.setMemberNum(rs.getInt("member_num"));
+				member.setPoint(rs.getInt("m_point"));
 				
 				members.add(member);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("MemberDAO - 회원리스트 조회 실패");
 		}
 		
-		close(rs);
-		close(pstmt);
+		close();
 		return members;
 	}
 	
@@ -250,6 +279,7 @@ public class MemberDAO extends DAOBase {
 		String sql = "DELETE FROM Member WHERE id=?";
 		
 		try {
+			conn = DBConnection.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, id);
@@ -257,10 +287,63 @@ public class MemberDAO extends DAOBase {
 			if (pstmt.executeUpdate() > 0) {
 				commit(conn);
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("MemberDAO - 회원 탈퇴 실패");
 		}
 		
+		close();
+	}
+	
+	
+	public int getPoint(int memberNum) {
+		int point = 0;
+		String sql = "SELECT member_num, m_point FROM Member WHERE member_num=? ";
+		
+		try {
+			conn = DBConnection.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, memberNum);
+			
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				point = rs.getInt("m_point");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		close();
+		return point;
+	}
+	
+	
+	
+	public boolean setPoint(int memberNum, int point) {
+		boolean result = false;
+		String sql = "UPDATE Member SET m_point=? WHERE member_num=? ";
+		
+		try {
+			conn = DBConnection.getConnection();
+			conn.setAutoCommit(false);
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, point);
+			pstmt.setInt(2, memberNum);
+			
+			if (pstmt.executeUpdate() > 0) {
+				result = true;
+				commit(conn);
+			}
+			
+		} catch (Exception e) {
+			rollback(conn);
+			e.printStackTrace();
+		}
+		
+		close();
+		return result;
 	}
 }

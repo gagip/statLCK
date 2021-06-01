@@ -21,6 +21,7 @@ public class BoardDeleteAction implements Action {
 		boolean result = boardDAO.deleteBoard(boardNum);
 		
 		if (result) {
+			response.setContentType("text/html; charset=UTF-8");
 			PrintWriter out = response.getWriter();
 			out.println("<script>");
 			out.println("alert('삭제되었습니다.');");

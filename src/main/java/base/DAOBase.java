@@ -18,4 +18,13 @@ public abstract class DAOBase {
 	}
 	
 	
+	public void close() {
+		try {
+            if ( pstmt != null ){ pstmt.close(); pstmt=null; }
+            if ( conn != null ){ conn.close(); conn=null;    }
+            if ( rs != null ) { rs.close(); rs=null; }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+	}
 }
