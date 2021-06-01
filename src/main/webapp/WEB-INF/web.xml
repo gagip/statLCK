@@ -34,6 +34,18 @@
   </servlet-mapping>
   
   
+  <servlet>
+    <description>Controller</description>
+    <display-name>ReplyController</display-name>
+    <servlet-name>ReplyController</servlet-name>
+    <servlet-class>reply.action.ReplyController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ReplyController</servlet-name>
+    <url-pattern>*.re</url-pattern>
+  </servlet-mapping>
+  
+  
   <resource-ref>
     <description>connection</description>
     <res-ref-name>jdbc/xe</res-ref-name>

@@ -41,7 +41,7 @@
               <th scope="col">글쓴이</th>
               <th scope="col">작성일</th>
               <th scope="col">조회</th>
-              <th scope="col">추천</th>
+              <!-- <th scope="col">추천</th> -->
             </tr>
           </thead>
           <tbody>
@@ -58,7 +58,7 @@
               <td>${board.author}</td>
               <td><fmt:formatDate value="${board.pubDate}" pattern="MM.dd"/></td>
               <td>${board.viewCnt}</td>
-              <td>${board.likeCnt}</td>
+              <!-- <td>${board.likeCnt}</td> -->
             </tr>
             </c:forEach>
           </tbody>

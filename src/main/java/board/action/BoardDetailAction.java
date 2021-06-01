@@ -1,5 +1,7 @@
 package board.action;
 
+import java.util.ArrayList;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -8,6 +10,8 @@ import base.Action;
 import base.ActionForward;
 import board.model.BoardDAO;
 import board.model.BoardDTO;
+import reply.model.ReplyDAO;
+import reply.model.ReplyDTO;
 
 public class BoardDetailAction implements Action{
 
@@ -38,6 +42,11 @@ public class BoardDetailAction implements Action{
 			}
 		}
 		BoardDTO board = boardDAO.getBoard(num);
+		
+		// 댓글 가져오기
+		ReplyDAO replyDAO = ReplyDAO.getInstance();
+		ArrayList<ReplyDTO> replyList = replyDAO.getReplyList(num);
+		if (replyList.size() > 0)	request.setAttribute("replyList", replyList);
 		
 		request.setAttribute("board", board);
 		request.setAttribute("pageNum", pageNum);
