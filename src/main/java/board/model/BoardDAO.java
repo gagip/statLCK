@@ -40,6 +40,24 @@ private static BoardDAO instance;
 	}
 	
 	
+	public int getSeq() {
+		int result = 1;
+		String sql = "SELECT board_num_seq.NEXTVAL FROM DUAL";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			
+			if (rs.next())		result = rs.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return result;
+	}
+	
+	
 	/**
 	 * 게시글 쓰기
 	 * @param board
@@ -53,7 +71,7 @@ private static BoardDAO instance;
 			
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setInt(1, getNum("Board", "board_num", conn));
+			pstmt.setInt(1, board.getBoardNum());
 			pstmt.setString(2, board.getTitle());
 			pstmt.setString(3, board.getCate());
 			pstmt.setInt(4, member_num);
@@ -73,29 +91,66 @@ private static BoardDAO instance;
 	}
 	
 	
+	
+	public boolean updateBoard(BoardDTO board) {
+		boolean result = false;
+		String sql = 	"UPDATE Board "
+					+	"SET title = ?, cate =?, content = ?, mod_date=SYSDATE "
+					+ 	"WHERE board_num = ?";
+		
+		try {
+			conn.setAutoCommit(false);
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, board.getTitle());
+			pstmt.setString(2, board.getCate());
+			pstmt.setString(3, board.getContent());
+			pstmt.setInt(4, board.getBoardNum());
+			
+			if (pstmt.executeUpdate() > 0) {
+				result = true;
+				commit(conn);
+			}
+		} catch (SQLException e) {
+			rollback(conn);
+			e.printStackTrace();
+		}
+		
+		
+		close(pstmt);
+		return result;
+	}
+	
+	
 	/**
 	 * 게시글 삭제
 	 * @param boardNum
 	 */
-	public void deleteBoard(int boardNum) {
+	public boolean deleteBoard(int boardNum) {
 		String sql = "DELETE FROM Board WHERE board_num=?";
+		boolean result = false;
 		
 		try {
+			conn.setAutoCommit(false);
+			
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setInt(1, boardNum);
 			
 			if (pstmt.executeUpdate() > 0) {
+				result = true;
 				commit(conn);
 			}
 			
 		} catch (SQLException e) {
+			rollback(conn);
 			e.printStackTrace();
 			System.out.println("BoardDAO - 게시글 삭제 실패");
-			rollback(conn);
 		}
 		
+		
 		close(pstmt);
+		return result;
 	}
 	
 	

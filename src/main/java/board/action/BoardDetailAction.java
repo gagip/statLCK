@@ -15,7 +15,7 @@ public class BoardDetailAction implements Action{
 	public ActionForward execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ActionForward forward = new ActionForward();
 		
-		String strNum = request.getParameter("num");
+		String strNum = request.getParameter("boardNum");
 		int num = Integer.parseInt(strNum);
 		String pageNum = request.getParameter("pageNum");
 		

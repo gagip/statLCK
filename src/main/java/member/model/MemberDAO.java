@@ -40,6 +40,23 @@ public class MemberDAO extends DAOBase {
 	
 	
 	
+	public int getSeq() {
+		int result = 1;
+		String sql = "SELECT member_num_seq.NEXTVAL FROM DUAL ";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next())		result=rs.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	
 	/**
 	 * 회원 가입
 	 */
@@ -51,7 +68,7 @@ public class MemberDAO extends DAOBase {
 			conn.setAutoCommit(false);
 			
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, getNum("Member", "member_num", conn));
+			pstmt.setInt(1, member.getMemberNum());
 			pstmt.setString(2, member.getId());
 			pstmt.setString(3, member.getPw());
 			pstmt.setString(4, member.getName());

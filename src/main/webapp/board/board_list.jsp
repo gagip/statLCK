@@ -11,6 +11,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
   <link rel="stylesheet" href="<%=request.getContextPath()%>/static/css/index.css">
   <link rel="stylesheet" href="<%=request.getContextPath()%>/static/css/bootstrap.css">
+  
 </head>
 <body>
   <jsp:include page="../common/header.jsp"/>
@@ -50,7 +51,7 @@
               <th scope="row">${board.boardNum}</th>
               <td>${board.cate}</td>
               <td>
-                <a href="boardDetailAction.bo?num=${board.boardNum}&pageNum=${spage}" class="text-decoration-none text-reset">
+                <a href="boardDetailAction.bo?boardNum=${board.boardNum}&pageNum=${spage}" class="text-decoration-none text-reset">
                 ${board.title}
                 </a>
               </td>
@@ -69,7 +70,7 @@
         <div class="container clearfix">
           <form class="row gy-2 gx-3 justify-content-center align-items-center align-self-center" action="boardListAction.bo" method="GET">
           <div class="col-auto">
-            <select class="form-select" name="opt">
+            <select class="form-select" id="opt" name="opt">
               <option value="0" selected>제목</option>
               <option value="1">글쓴이</option>
               <option value="2">내용</option>
@@ -79,7 +80,7 @@
           
           <div class="col-auto">
             <div class="input-group align-items-center">
-              <input type="text" class="form-control" name="condition" placeholder="" aria-label="Recipient's username" aria-describedby="button-addon2">
+              <input type="text" class="form-control" id="condition" name="condition" placeholder="">
               <button class="btn btn-outline-secondary" type="submit" id="button-addon2">검색</button>
             </div>
           </div>
@@ -113,6 +114,33 @@
     </div>
   </div>
   <script src="<%=request.getContextPath()%>/static/js/index.js"></script>
+  <script>
+  var error = "${requestScope.fail}";
+  switch (error) {
+    case "auth":
+      alert("인증오류");
+      break;
   
+    default:
+      break;
+  }
+  
+  var delete_result = Boolean("${requestScope.deleteResult}");
+  if (delete_result){
+	  alert("게시글이 삭제되었습니다.");
+  }
+
+  function selectElement(id, valueToSelect){
+    let element = document.getElementById(id);
+    element.value = valueToSelect;
+  }
+
+  var board_search_opt = "${param.opt}";
+  var board_search_condition = "${param.condition}";
+  if (board_search_opt){
+    selectElement("opt", board_search_opt);
+    document.getElementById("condition").value = board_search_condition;
+  }
+  </script>
 </body>
 </html>

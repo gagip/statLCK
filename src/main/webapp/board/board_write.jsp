@@ -31,6 +31,8 @@
         <!-- 게시글 작성 -->
         <h2>게시글 작성</h2>
         <hr>
+        <!-- 새롭게 게시글 작성 -->
+        <c:if test="${board == null}">
         <form action="boardWriteAction.bo" method="POST">
           <input type="hidden" name="member_num" value="${sessionScope.sessionMemberNum}">
           <div class="mb-3">
@@ -45,7 +47,7 @@
           
           <div class="mb-3">
             <label for="title" class="form-label">제목</label>
-            <input type="text" class="form-control" id="tite" name="title">
+            <input type="text" class="form-control" id="title" name="title">
             <div class="form-text fst-italic">제목은 50글자만 가능합니다.</div>
           </div>
           
@@ -60,6 +62,39 @@
             <input type="button" value="취소">
           </div>
         </form>
+        </c:if>
+        <!-- 기존 게시글 수정 -->
+        <c:if test="${board != null}">
+        <form action="boardUpdateAction.bo" method="POST">
+          <input type="hidden" name="member_num" value="${sessionScope.sessionMemberNum}">
+          <div class="mb-3">
+            <label for="cate" class="form-label">글성격</label>
+            <select class="form-select" id="cate" name="cate">
+              <option value="공지">공지</option>
+              <option value="일반">일반</option>
+              <option value="질문">질문</option>
+            </select>
+            <div class="form-text fst-italic"></div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="title" class="form-label">제목</label>
+            <input type="text" class="form-control" id="tite" name="title" value="${board.title}">
+            <div class="form-text fst-italic">제목은 50글자만 가능합니다.</div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="content" class="form-label">내용</label>
+            <textarea rows="10" class="form-control" id="content" name="content">${board.content}</textarea>
+            <div class="form-text fst-italic">욕설 또는 과도한 비난은 제재 사유가 됩니다.</div>
+          </div>
+          
+          <div align="center">
+            <input type="submit" value="작성">
+            <input type="button" value="취소">
+          </div>
+        </form>
+        </c:if>
         </c:otherwise>
         </c:choose>
         
@@ -68,6 +103,17 @@
     </div>
   </div>
   <script src="<%=request.getContextPath()%>/static/js/index.js"></script>
+  <script>
+  var board_cate = "${board.cate}";
+
+  if (board_cate) {
+    selectElement("cate", board_cate);
+  }
   
+  function selectElement(id, valueToSelect){
+    let element = document.getElementById(id);
+    element.value = valueToSelect;
+  }
+  </script>
 </body>
 </html>

@@ -37,13 +37,13 @@ public class MemberSigninAction implements Action {
 			forward.setNextPath("index.me");
 			break;
 		case PW_MISMATCH:
-			request.setAttribute("fail", "0");
+			request.setAttribute("error", "pw_mismatch");
 			
 			forward.setRedirect(false);
 			forward.setNextPath("signin.me");
 			break;
 		case NON_EXIST_ID:
-			request.setAttribute("fail", "-1");
+			request.setAttribute("error", "non_exist_id");
 			
 			forward.setRedirect(false);
 			forward.setNextPath("signin.me");

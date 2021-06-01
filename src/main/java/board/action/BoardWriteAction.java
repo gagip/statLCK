@@ -23,6 +23,7 @@ public class BoardWriteAction implements Action {
 		BoardDAO boardDAO = BoardDAO.getInstance();
 		BoardDTO board = new BoardDTO();
 		
+		board.setBoardNum(boardDAO.getSeq());
 		board.setCate(cate);
 		board.setTitle(title);
 		board.setContent(content);
@@ -30,7 +31,7 @@ public class BoardWriteAction implements Action {
 		boardDAO.insertBoard(board, memberNum);
 		
 		forward.setRedirect(true);
-		forward.setNextPath("boardListAction.bo");
+		forward.setNextPath("boardDetailAction.bo?boardNum="+board.getBoardNum());
 		
 		
 		return forward;

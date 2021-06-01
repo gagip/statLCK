@@ -19,13 +19,14 @@ public class MemberSignupAction implements Action{
 		MemberDAO dao = MemberDAO.getInstance();
 		
 		MemberDTO member = new MemberDTO();
+		member.setMember_num(dao.getSeq());
 		member.setId(request.getParameter("id"));
 		member.setPw(request.getParameter("pw"));
 		member.setName(request.getParameter("name"));
 		member.setEmail(request.getParameter("email"));
 		member.setAddress(request.getParameter("address"));
-		member.setTel(request.getParameter("p_image"));
-		
+		member.setTel(request.getParameter("tel"));
+		member.setpImage(request.getParameter("pImage"));
 		// 회원가입
 		dao.addMember(member);
 		
@@ -33,7 +34,7 @@ public class MemberSignupAction implements Action{
 		forward.setRedirect(true);
 		forward.setNextPath("index.me");
 		
-		request.getSession().setAttribute("msg", "1");
+		request.getSession().setAttribute("msg", "회원가입이 완료되었습니다");
 		
 		return forward;
 	}
